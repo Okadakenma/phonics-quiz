@@ -11,8 +11,22 @@ export function useSpeech() {
 
     const loadVoice = () => {
       const voices = window.speechSynthesis.getVoices();
-      const en = voices.find(v => v.lang.startsWith('en') && !v.name.includes('Google UK'));
-      voiceRef.current = en ?? voices[0] ?? null;
+      // 高品質な音声を優先順に選択
+      const preferred = [
+        'Google US English',   // Chrome
+        'Samantha',            // macOS/iOS Safari
+        'Alex',                // macOS
+        'Microsoft Zira',      // Windows
+      ];
+      let chosen: SpeechSynthesisVoice | null = null;
+      for (const name of preferred) {
+        const v = voices.find(v => v.name === name);
+        if (v) { chosen = v; break; }
+      }
+      if (!chosen) {
+        chosen = voices.find(v => v.lang === 'en-US') ?? null;
+      }
+      voiceRef.current = chosen;
     };
 
     loadVoice();

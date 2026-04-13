@@ -35,11 +35,14 @@ export function QuestionCard({ word, answerState, onSpeak }: Props) {
       </div>
 
       {!isAnswered ? (
-        <p className="text-stone-700 text-lg font-bold leading-relaxed">
-          この えの<br />
-          さいしょの<br />
-          おとは？
-        </p>
+        <div>
+          <p className="text-xl font-bold text-stone-600 mb-1">{word.wordJa}</p>
+          <p className="text-stone-700 text-lg font-bold leading-relaxed">
+            この えの<br />
+            さいしょの<br />
+            おとは？
+          </p>
+        </div>
       ) : (
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-2xl font-black text-stone-800">{word.letter}</span>
@@ -48,6 +51,7 @@ export function QuestionCard({ word, answerState, onSpeak }: Props) {
           <span className="text-sm text-stone-400">({word.phonicsJa})</span>
           <span className="text-stone-400">→</span>
           <span className="text-xl font-bold text-stone-700">{word.word}</span>
+          <span className="text-base text-stone-500">（{word.wordJa}）</span>
         </div>
       )}
     </div>

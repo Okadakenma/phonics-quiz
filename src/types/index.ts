@@ -1,6 +1,7 @@
 export type PhonicsWord = {
   letter: string;
   word: string;
+  wordJa: string;
   emoji: string;
   phonicsEn: string;
   phonicsJa: string;

@@ -27,30 +27,30 @@ function delay(ms: number): Promise<void> {
 // 表示用の phonicsEn はそのまま残し、読み上げ用だけ変換する
 // TTS が認識できる実際の英単語・一般的な間投詞を使用
 const PHONICS_TTS_MAP: Record<string, string> = {
-  'ah':   'aah',   // A: 間投詞 "aah" → /æ/
-  'buh':  'buh',
-  'kuh':  'kuh',
-  'duh':  'duh',   // 間投詞として認識
-  'eh':   'eh',    // E: 間投詞 "eh" → /ɛ/
-  'fuh':  'fuh',
-  'guh':  'guh',
-  'huh':  'huh',   // 間投詞として認識
-  'ih':   'in',    // I: "in" の頭音 /ɪ/ ("ihh" は文字読みされるため単語で代替)
-  'juh':  'juh',
-  'kwuh': 'qu',    // Q: "qu" → TTS が /kw/ と読む
-  'luh':  'luh',
-  'muh':  'muh',
-  'nuh':  'nuh',
-  'puh':  'puh',
-  'ruh':  'ruh',
-  'suh':  'suh',
-  'tuh':  'tuh',
-  'uh':   'uh',    // U: 間投詞 "uh" → /ʌ/
-  'vuh':  'vuh',
-  'wuh':  'wuh',
-  'ks':   'x',     // X: "x" → TTS が /eks/ と読む
-  'yuh':  'yuh',
-  'zuh':  'zuh',
+  'ah':   'aah',    // A: 間投詞
+  'buh':  'buh',    // B
+  'kuh':  'kuh',    // C/K
+  'duh':  'duh',    // D: 間投詞として認識
+  'eh':   'eh',     // E: 間投詞
+  'fuh':  'fuh',    // F
+  'guh':  'guh',    // G
+  'huh':  'huh',    // H: 間投詞
+  'ih':   'in',     // I: "in" の頭音 /ɪ/
+  'juh':  'juh',    // J
+  'kwuh': 'qu',     // Q: /kw/
+  'luh':  'luh',    // L
+  'muh':  'muh',    // M
+  'nuh':  'nuh',    // N
+  'puh':  'puh',    // P
+  'ruh':  'ruh',    // R
+  'suh':  'sss',    // S: "sss" → TTS が /s/ の連続音として読む
+  'tuh':  'tuh',    // T
+  'uh':   'uh',     // U: 間投詞
+  'vuh':  'vuh',    // V
+  'wuh':  'wuh',    // W
+  'ks':   'x',      // X: /eks/
+  'yuh':  'yuh',    // Y
+  'zuh':  'zzz',    // Z: "zzz" → TTS が /z/ の連続音（蜂の羽音）として読む
 };
 
 export async function speakPhonicsSequence(

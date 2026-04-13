@@ -25,18 +25,19 @@ function delay(ms: number): Promise<void> {
 
 // TTS がアルファベット個別読みしてしまうフォニックス音の変換マップ
 // 表示用の phonicsEn はそのまま残し、読み上げ用だけ変換する
+// TTS が認識できる実際の英単語・一般的な間投詞を使用
 const PHONICS_TTS_MAP: Record<string, string> = {
-  'ah':   'aah',    // A (open mouth "aah")
+  'ah':   'aah',   // A: 間投詞 "aah" → /æ/
   'buh':  'buh',
   'kuh':  'kuh',
-  'duh':  'duh',
-  'eh':   'ehh',    // E
+  'duh':  'duh',   // 間投詞として認識
+  'eh':   'eh',    // E: 間投詞 "eh" → /ɛ/
   'fuh':  'fuh',
   'guh':  'guh',
-  'huh':  'huh',
-  'ih':   'ihh',    // I (TTS が i-h と読まないよう)
+  'huh':  'huh',   // 間投詞として認識
+  'ih':   'in',    // I: "in" の頭音 /ɪ/ ("ihh" は文字読みされるため単語で代替)
   'juh':  'juh',
-  'kwuh': 'qu',     // Q: "qu" → TTS が /kw/ と読む
+  'kwuh': 'qu',    // Q: "qu" → TTS が /kw/ と読む
   'luh':  'luh',
   'muh':  'muh',
   'nuh':  'nuh',
@@ -44,10 +45,10 @@ const PHONICS_TTS_MAP: Record<string, string> = {
   'ruh':  'ruh',
   'suh':  'suh',
   'tuh':  'tuh',
-  'uh':   'uhh',    // U
+  'uh':   'uh',    // U: 間投詞 "uh" → /ʌ/
   'vuh':  'vuh',
   'wuh':  'wuh',
-  'ks':   'x',      // X: "x" → TTS が /eks/ と読む（ks単体より自然）
+  'ks':   'x',     // X: "x" → TTS が /eks/ と読む
   'yuh':  'yuh',
   'zuh':  'zuh',
 };
@@ -59,12 +60,12 @@ export async function speakPhonicsSequence(
   voice: SpeechSynthesisVoice | null
 ): Promise<void> {
   const ttsPhonics = PHONICS_TTS_MAP[phonicsEn] ?? phonicsEn;
-  // Step 1: フォニックス音
-  await speak(ttsPhonics, { rate: 0.6, pitch: 1.2, voice });
-  await delay(350);
-  // Step 2: アルファベット名（小文字で渡す）
+  // Step 1: アルファベット名（小文字で渡す）
   await speak(letter.toLowerCase(), { rate: 0.7, pitch: 1.1, voice });
   await delay(300);
+  // Step 2: フォニックス音
+  await speak(ttsPhonics, { rate: 0.6, pitch: 1.2, voice });
+  await delay(350);
   // Step 3: 英単語
   await speak(word, { rate: 0.75, pitch: 1.1, voice });
 }

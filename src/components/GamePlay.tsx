@@ -27,31 +27,37 @@ export function GamePlay({ state, onAnswer, onNext }: Props) {
     return () => clearTimeout(t);
   }, [currentIndex, answerState, word.word, speakWord]);
 
-  // 回答後: 効果音 + フォニックス読み上げ + 次の問題へ遷移
+  // 回答後: 効果音 + フォニックス読み上げ完了後 → 次の問題へ遷移
   const { phonicsEn, letter, word: wordText } = word;
   useEffect(() => {
     if (answerState === 'unanswered') return;
 
+    let cancelled = false;
     const isCorrect = answerState === 'correct';
 
     // 効果音（即時）
     if (isCorrect) playCorrectSound();
     else playIncorrectSound();
 
-    // フォニックス読み上げ
-    const speakDelay = isCorrect ? 300 : 600;
-    const speakTimer = setTimeout(() => {
-      speakSequence(phonicsEn, letter, wordText);
-    }, speakDelay);
+    const run = async () => {
+      // フォニックス読み上げ開始まで待機
+      const speakDelay = isCorrect ? 300 : 600;
+      await new Promise(r => setTimeout(r, speakDelay));
+      if (cancelled) return;
 
-    // 次の問題へ
-    const nextDelay = isCorrect ? 3000 : 3800;
-    const nextTimer = setTimeout(() => onNext(), nextDelay);
+      // フォニックス → アルファベット → 単語 の読み上げ完了を待つ
+      await speakSequence(phonicsEn, letter, wordText);
+      if (cancelled) return;
 
-    return () => {
-      clearTimeout(speakTimer);
-      clearTimeout(nextTimer);
+      // 読み上げ完了後、少し間を置いて次の問題へ
+      await new Promise(r => setTimeout(r, 800));
+      if (cancelled) return;
+
+      onNext();
     };
+
+    run();
+    return () => { cancelled = true; };
   }, [answerState, phonicsEn, letter, wordText, speakSequence, onNext]);
 
   const handleSpeak = useCallback(() => {

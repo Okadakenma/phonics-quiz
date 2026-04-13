@@ -40,8 +40,8 @@ export function useSpeech() {
     speak(word, { rate: 0.75, pitch: 1.0, voice: voiceRef.current });
   }, []);
 
-  const speakSequence = useCallback((phonicsEn: string, letter: string, word: string) => {
-    speakPhonicsSequence(phonicsEn, letter, word, voiceRef.current);
+  const speakSequence = useCallback((phonicsEn: string, letter: string, word: string): Promise<void> => {
+    return speakPhonicsSequence(phonicsEn, letter, word, voiceRef.current);
   }, []);
 
   return { speakWord, speakSequence };
